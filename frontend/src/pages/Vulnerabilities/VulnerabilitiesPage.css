@@ -1,0 +1,256 @@
+.vulnerabilities-page {
+  display: flex;
+  min-height: 100vh;
+  background: #020617;
+  color: #f8fafc;
+}
+
+.vulnerabilities-sidebar {
+  width: 16rem;
+  background: #0f172a;
+  border-right: 1px solid rgba(71, 85, 105, 0.3);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  z-index: 40;
+}
+
+.vulnerabilities-main {
+  flex: 1;
+  margin-left: 16rem;
+  padding: 2rem;
+}
+
+.vulnerabilities-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: #94a3b8;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.categories-filter {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.category-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: #0f172a;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  border-radius: 0.75rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.category-btn:hover {
+  border-color: rgba(124, 58, 237, 0.5);
+  color: white;
+}
+
+.category-btn.active {
+  background: rgba(124, 58, 237, 0.2);
+  border-color: #7c3aed;
+  color: white;
+}
+
+.category-count {
+  padding: 0.125rem 0.5rem;
+  background: rgba(71, 85, 105, 0.3);
+  border-radius: 9999px;
+  font-size: 0.75rem;
+}
+
+.category-btn.active .category-count {
+  background: rgba(124, 58, 237, 0.3);
+}
+
+.vulnerabilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.vulnerability-card {
+  background: #0f172a;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.vulnerability-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.vuln-blue:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.vuln-emerald:hover {
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.vuln-amber:hover {
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.vuln-red:hover {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.vuln-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.vuln-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vuln-icon-blue {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+
+.vuln-icon-emerald {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+}
+
+.vuln-icon-amber {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+}
+
+.vuln-icon-red {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+}
+
+.severity-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.severity-critical {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+}
+
+.severity-high {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+}
+
+.severity-medium {
+  background: rgba(234, 179, 8, 0.1);
+  color: #facc15;
+}
+
+.vuln-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.vuln-description {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.vuln-progress {
+  margin-bottom: 1.5rem;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  height: 0.5rem;
+  background: rgba(71, 85, 105, 0.3);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed 0%, #6366f1 100%);
+  border-radius: 9999px;
+  transition: width 0.3s;
+}
+
+.vuln-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.learn-more-btn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  border-radius: 0.75rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.learn-more-btn:hover {
+  border-color: rgba(124, 58, 237, 0.5);
+  color: white;
+}

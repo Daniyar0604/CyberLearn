@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: cyberlearn_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 57685125
+      MYSQL_DATABASE: cyberlearn
+      MYSQL_USER: cyber_user
+      MYSQL_PASSWORD: cyber_password
+    ports:
+      - "3306:3306"
+    volumes:
+      # Сохраняем данные базы, чтобы они не пропадали при перезапуске
+      - db_data:/var/lib/mysql
+      # Прокидываем файл инициализации
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  db_data:

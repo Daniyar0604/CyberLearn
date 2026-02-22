@@ -1,0 +1,7 @@
+
+SELECT DATABASE();
+
+USE cyberlearn;
+SHOW TABLES;
+SELECT *
+FROM users;

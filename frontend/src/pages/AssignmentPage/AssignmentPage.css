@@ -1,0 +1,264 @@
+
+.assignment-page {
+  display: flex;
+  min-height: 100vh;
+  background: #020617;
+  color: #f8fafc;
+}
+
+.assignment-sidebar {
+  width: 16rem;
+  background: #0f172a;
+  border-right: 1px solid rgba(71, 85, 105, 0.3);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  z-index: 40;
+}
+
+.assignment-main {
+  flex: 1;
+  margin-left: 16rem;
+  padding: 2rem;
+}
+
+.assignment-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.assignment-header {
+  margin-bottom: 2rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin-bottom: 1rem;
+}
+
+.breadcrumb-item.active {
+  color: white;
+}
+
+.breadcrumb-separator {
+  color: #64748b;
+}
+
+.assignment-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.assignment-meta {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.assignment-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .assignment-content {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.assignment-left,
+.assignment-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.description-card,
+.requirements-card,
+.code-sample-card,
+.submission-card,
+.status-card {
+  background: #0f172a;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  border-radius: 1.5rem;
+  padding: 2rem;
+}
+
+.description-card h2,
+.requirements-card h2,
+.code-sample-card h2,
+.submission-card h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.description-card p {
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.requirements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.requirements-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: #cbd5e1;
+}
+
+.requirements-list li svg {
+  color: #34d399;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.code-block {
+  background: #020617;
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.code-block pre {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.code-block code {
+  color: #60a5fa;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #e2e8f0;
+  margin-bottom: 0.5rem;
+}
+
+.answer-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  border-radius: 0.75rem;
+  color: white;
+  font-size: 0.875rem;
+  font-family: inherit;
+  resize: vertical;
+  line-height: 1.6;
+  transition: border-color 0.2s;
+}
+
+.answer-textarea:focus {
+  outline: none;
+  border-color: #7c3aed;
+}
+
+.file-upload {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px dashed rgba(71, 85, 105, 0.5);
+  border-radius: 0.75rem;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-label:hover {
+  border-color: #7c3aed;
+  color: white;
+}
+
+.submit-button {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.status-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.status-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.status-pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+}
+
+.status-label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.status-text {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}

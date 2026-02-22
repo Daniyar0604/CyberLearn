@@ -1,0 +1,20 @@
+
+.card {
+  border-radius: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.card-default {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.card-glass {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.card:hover {
+  border-color: rgba(124, 58, 237, 0.3);
+}

@@ -1,0 +1,176 @@
+
+.register-page {
+  min-height: 100vh;
+  background: #020617;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-bg-gradient {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 24rem;
+  height: 24rem;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.register-bg-gradient-2 {
+  position: absolute;
+  bottom: 25%;
+  right: 25%;
+  width: 24rem;
+  height: 24rem;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.register-container {
+  width: 100%;
+  max-width: 28rem;
+  position: relative;
+  z-index: 10;
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.register-logo {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin: 0 auto 1rem;
+  box-shadow: 0 8px 16px rgba(124, 58, 237, 0.25);
+}
+
+.register-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.register-subtitle {
+  color: #94a3b8;
+}
+
+.register-card {
+  padding: 2rem;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.agreement-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.agreement-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.checkbox-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.custom-checkbox {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  appearance: none;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  background: rgba(15, 23, 42, 0.5);
+  transition: all 0.2s;
+}
+
+.custom-checkbox:checked {
+  border-color: #7c3aed;
+  background: #7c3aed;
+}
+
+.custom-checkbox:hover {
+  border-color: #a78bfa;
+}
+
+.checkbox-checkmark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.custom-checkbox:checked + .checkbox-checkmark {
+  opacity: 1;
+}
+
+.agreement-text {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  line-height: 1.4;
+  transition: color 0.2s;
+}
+
+.agreement-label:hover .agreement-text {
+  color: #cbd5e1;
+}
+
+.agreement-error {
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-left: 1.75rem;
+}
+
+.register-button {
+  width: 100%;
+}
+
+.register-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.login-link {
+  color: #a78bfa;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.2s;
+  padding: 0;
+  font-size: 0.875rem;
+  text-decoration: underline;
+}
+
+.login-link:hover {
+  color: #c4b5fd;
+}

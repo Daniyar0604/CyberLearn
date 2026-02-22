@@ -1,0 +1,28 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+.app {
+  min-height: 100vh;
+  background: #020617;
+  color: #f8fafc;
+  overflow-x: hidden;
+}
+
+/* Remove horizontal scroll globally */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}

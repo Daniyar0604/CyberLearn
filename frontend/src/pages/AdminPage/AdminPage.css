@@ -1,0 +1,259 @@
+/* === ОБЩЕЕ === */
+
+.admin-main {
+  padding: 2rem;
+  color: #f8fafc;
+}
+
+/* === HEADER === */
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.admin-subtitle {
+  color: #94a3b8;
+}
+
+/* === STATS === */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: #0f172a;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-violet .stat-icon {
+  background: rgba(124, 58, 237, 0.1);
+  color: #a78bfa;
+}
+
+.stat-emerald .stat-icon {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+}
+
+.stat-amber .stat-icon {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+}
+
+.stat-blue .stat-icon {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+/* === CONTENT CARD === */
+
+.admin-content {
+  background: #0f172a;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* === TABLE HEADER === */
+
+.content-header {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* === TABLE === */
+
+.data-table {
+  overflow-x: auto;
+}
+
+.data-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.data-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.2);
+  font-size: 0.875rem;
+}
+
+.data-table tr:hover {
+  background: rgba(71, 85, 105, 0.1);
+}
+
+/* === BADGES === */
+
+.role-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.role-badge.role-admin {
+  background: rgba(124, 58, 237, 0.15);
+  color: #a78bfa;
+  border: 1px solid rgba(124, 58, 237, 0.35);
+}
+
+.role-badge.role-user {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.28);
+}
+
+/* === ACTION BUTTONS === */
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: rgba(71, 85, 105, 0.2);
+  border: none;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  background: rgba(124, 58, 237, 0.2);
+  color: white;
+}
+
+.action-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+.action-btn.success:hover {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* === MODAL === */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  width: 360px;
+  background: #0f0f14;
+  color: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.modal-title {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.modal-select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #151521;
+  color: #fff;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn-cancel {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  padding: 9px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-save {
+  background: #7c3aed;
+  border: none;
+  color: #fff;
+  padding: 9px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
+/* === SIDEBAR (КРИТИЧНО) === */
+

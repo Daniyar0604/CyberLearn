@@ -1,0 +1,13 @@
+.confirm-modal.danger .confirm-header {
+  color: #f87171;
+}
+
+.btn-save.danger {
+  background: #ef4444;
+}
+
+.confirm-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
