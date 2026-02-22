@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Search } from 'lucide-react';
+import { Bar, Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
 
 import AppLayout from '../../components/layout/AppLayout';
 import { Input } from '../../components/ui/Input/Input';
 import { Button } from '../../components/ui/Button/Button';
 
 import './DashboardPage.css';
+import { getActivityFeed } from '../../services/activityApi';
 
 function getUserFromStorage() {
   try {
@@ -19,6 +33,44 @@ function getUserFromStorage() {
 function DashboardPage() {
   const navigate = useNavigate();
   const user = getUserFromStorage();
+  const [activityFeed, setActivityFeed] = useState([]);
+  const [loadingFeed, setLoadingFeed] = useState(true);
+  const [feedError, setFeedError] = useState(null);
+
+  useEffect(() => {
+    async function fetchFeed() {
+      setLoadingFeed(true);
+      setFeedError(null);
+      try {
+        const feedData = await getActivityFeed();
+        // Backend now returns feed array already sorted
+        const allActivities = (feedData.feed || []).map(item => {
+          if (item.type === 'module') {
+            return {
+              type: 'module',
+              action: 'Завершен модуль',
+              title: item.title,
+              course: item.course_title,
+              time: item.completed_at
+            };
+          } else {
+            return {
+              type: 'course',
+              action: 'Завершен курс',
+              title: item.course_title,
+              time: item.completed_at
+            };
+          }
+        });
+        setActivityFeed(allActivities);
+      } catch (e) {
+        setFeedError(e.message);
+      } finally {
+        setLoadingFeed(false);
+      }
+    }
+    fetchFeed();
+  }, []);
 
   const {
     username = '',
@@ -114,6 +166,8 @@ function DashboardPage() {
         ))}
       </div>
 
+     
+
       {/* COURSES */}
       <section className="courses-section">
         <div className="section-header">
@@ -162,41 +216,43 @@ function DashboardPage() {
       {/* ACTIVITY */}
       <section className="activity-section">
         <h2>Последняя активность</h2>
-
         <div className="activity-list">
-          {[
-            {
-              action: 'Завершен модуль',
-              title: 'SQL Injection Basics',
-              time: '2 часа назад',
-              type: 'success'
-            },
-            {
-              action: 'Начат курс',
-              title: 'XSS Fundamentals',
-              time: '5 часов назад',
-              type: 'info'
-            },
-            {
-              action: 'Получено достижение',
-              title: 'First Blood',
-              time: '1 день назад',
-              type: 'achievement'
-            }
-          ].map((activity, i) => (
-            <div
-              key={i}
-              className={`activity-item activity-${activity.type}`}
-            >
-              <div className="activity-icon" />
-              <div className="activity-content">
-                <div className="activity-title">
-                  {activity.action}: {activity.title}
+          {loadingFeed ? (
+            <div className="activity-item">Загрузка...</div>
+          ) : feedError ? (
+            <div className="activity-item activity-error">{feedError}</div>
+          ) : activityFeed.length === 0 ? (
+            <div className="activity-item">Нет активности</div>
+          ) : (
+            activityFeed.map((activity, i) => (
+              <div
+                key={i}
+                className={`activity-item activity-${activity.type}`}
+              >
+                <div className="activity-icon" />
+                <div className="activity-content">
+                  <div className="activity-title">
+                    {activity.action}: {activity.title}
+                    {/* Only show course name for module completion */}
+                    {activity.type === 'module' && activity.course ? (
+                      <span style={{ color: '#94a3b8', marginLeft: 4 }}>
+                        ({activity.course})
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="activity-time">
+                    {(() => {
+                      const d = new Date(activity.time);
+                      // Remove seconds
+                      return d.toLocaleString(undefined, {
+                        hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric'
+                      });
+                    })()}
+                  </div>
                 </div>
-                <div className="activity-time">{activity.time}</div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </section>
     </AppLayout>

@@ -415,6 +415,55 @@ VALUES
   '/xss/challenge'
 );
 
+INSERT INTO exercises (
+  vulnerability_id,
+  slug,
+  title,
+  description,
+  theory,
+  difficulty,
+  order_index,
+  estimated_minutes,
+  lab_key,
+  lab_entry_path
+)
+VALUES
+(
+  (
+    SELECT id
+    FROM vulnerabilities
+    WHERE code = 'csrf'
+    LIMIT 1
+  ),
+  'csrf-get-request',
+  'CSRF через GET-запрос',
+  'Выполните опасное действие, передаваемое через GET-запрос.',
+  'Иногда разработчики ошибочно используют GET-запросы для изменения состояния приложения (например, удаление аккаунта или смена настроек). Такие действия легко эксплуатируются через CSRF, так как GET-запрос можно выполнить с помощью изображения или ссылки.',
+  'beginner',
+  4,
+  10,
+  'csrf-get',
+  '/settings'
+),
+(
+  (
+    SELECT id
+    FROM vulnerabilities
+    WHERE code = 'csrf'
+    LIMIT 1
+  ),
+  'csrf-json-api',
+  'CSRF через API (JSON)',
+  'Эксплуатируйте CSRF-уязвимость в JSON API.',
+  'Существует миф, что CSRF невозможен при использовании JSON. Однако если сервер принимает запросы с cookie без проверки CSRF-токена и CORS настроен неправильно, атака возможна даже на API-эндпоинты.',
+  'intermediate',
+  5,
+  20,
+  'csrf-api',
+  '/api/profile'
+);
+
+
 
 CREATE TABLE active_sessions (
    id INT AUTO_INCREMENT PRIMARY KEY,
@@ -440,3 +489,17 @@ CREATE TABLE user_exercises (
 );
 
 select * from users;
+select * from exercises;
+
+CREATE TABLE IF NOT EXISTS user_exercises (
+   user_id INT NOT NULL,
+   exercise_id INT NOT NULL,
+   completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+   PRIMARY KEY (user_id, exercise_id),
+
+   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+   FOREIGN KEY (exercise_id) REFERENCES exercises(id) ON DELETE CASCADE
+);
+
+select * from user_exercises;

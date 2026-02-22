@@ -33,9 +33,29 @@ const AdminService = {
   },
 
   async getStats() {
-    const users_total = await UserModel.countAll();
-    const admins_total = await UserModel.countAdmins();
-    return { users_total, admins_total };
+    // 1. Количество курсов (таблица vulnerabilities)
+    const [[{ cnt: courses_total }]] = await require('../config/db').query('SELECT COUNT(*) as cnt FROM vulnerabilities');
+
+    // 2. Общее число упражнений
+    const [[{ cnt: exercises_total }]] = await require('../config/db').query('SELECT COUNT(*) as cnt FROM exercises');
+
+    // 3. Общее число завершённых упражнений всеми пользователями
+    const [[{ cnt: completed_total }]] = await require('../config/db').query('SELECT COUNT(*) as cnt FROM user_exercises');
+
+    // 4. Количество выполненных упражнений по каждому пользователю
+    const [userExerciseCounts] = await require('../config/db').query(`
+      SELECT u.id as user_id, u.username, COUNT(ue.exercise_id) as completed_count
+      FROM users u
+      LEFT JOIN user_exercises ue ON u.id = ue.user_id
+      GROUP BY u.id
+    `);
+
+    return {
+      courses_total,
+      exercises_total,
+      completed_total,
+      userExerciseCounts
+    };
   },
 
   async setUserBlocked({ currentUser, userId, isBlocked }) {

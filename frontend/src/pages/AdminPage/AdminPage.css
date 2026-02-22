@@ -1,8 +1,28 @@
+.data-table th.role-col,
+.data-table th.exercises-col,
+.data-table th.actions-col {
+  text-align: center;
+}
+
+.data-table td.role-col,
+.data-table td.exercises-col,
+.data-table td.actions-col {
+  text-align: center;
+}
+
+.stat-value {
+  text-align: center;
+  width: 100%;
+  display: block;
+}
 /* === ОБЩЕЕ === */
 
 .admin-main {
   padding: 2rem;
   color: #f8fafc;
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 /* === HEADER === */
@@ -91,6 +111,9 @@
   border: 1px solid rgba(71, 85, 105, 0.3);
   border-radius: 1.5rem;
   padding: 1.5rem;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 /* === TABLE HEADER === */
@@ -103,17 +126,22 @@
 
 /* === TABLE === */
 
+
 .data-table {
   overflow-x: auto;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .data-table table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 100%;
 }
 
 .data-table th {
-  text-align: left;
+  text-align: center;
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
@@ -157,6 +185,8 @@
 .action-buttons {
   display: flex;
   gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
 }
 
 .action-btn {

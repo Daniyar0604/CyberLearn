@@ -16,6 +16,7 @@ const vulnerabilitiesRoutes = require('./src/routes/vulnerabilities');
 const progressRoutes = require('./src/routes/progress');
 const uploadRoutes = require('./src/routes/upload');
 const exerciseProgressRoutes = require('./src/routes/exerciseProgressRoutes');
+const activityRoutes = require('./src/routes/activity');
 
 const app = express();
 
@@ -38,11 +39,11 @@ app.use('/api/vulnerabilities', vulnerabilitiesRoutes);
 app.use('/api/exercises', exercisesRoutes);
 app.use('/api/lab', labRoutes);
 
+
 app.use('/api/progress', progressRoutes);
-
-
 app.use('/api/upload', uploadRoutes);
 app.use('/api', exerciseProgressRoutes);
+app.use('/api/activity', activityRoutes);
 
 // ===== HEALTH CHECK =====
 app.get('/health', async (req, res) => {

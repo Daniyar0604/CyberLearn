@@ -15,7 +15,7 @@ import AppLayout from '../../components/layout/AppLayout';
 import { Button } from '../../components/ui/Button/Button';
 import { Input } from '../../components/ui/Input/Input';
 import ConfirmModal from '../../components/ui/ConfirmModal/ConfirmModal';
-
+import { apiGetAdminStats } from '../../services/adminApi';
 import './AdminPage.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -56,11 +56,13 @@ async function apiSetUserBlocked(userId, is_blocked) {
   if (!res.ok) throw new Error(await res.text());
 }
 
+
 function AdminPage() {
   const [users, setUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [usersError, setUsersError] = useState('');
   const [search, setSearch] = useState('');
+  const [stats, setStats] = useState(null);
 
   const [editUser, setEditUser] = useState(null);
   const [newRole, setNewRole] = useState('user');
@@ -91,18 +93,37 @@ function AdminPage() {
     }
   }
 
+  async function loadStats() {
+    try {
+      const s = await apiGetAdminStats();
+      setStats(s);
+    } catch (e) {
+      // ignore for now
+    }
+  }
+
   useEffect(() => {
     loadUsers();
+    loadStats();
   }, []);
+
+  // enrich users with completed exercises count
+  const usersWithExercises = useMemo(() => {
+    if (!stats || !stats.userExerciseCounts) return users;
+    return users.map(u => {
+      const found = stats.userExerciseCounts.find(x => x.user_id === u.id);
+      return { ...u, exercises: found ? found.completed_count : 0 };
+    });
+  }, [users, stats]);
 
   const filteredUsers = useMemo(() => {
     const q = search.toLowerCase();
-    return users.filter(u =>
+    return usersWithExercises.filter(u =>
       [u.name, u.email, u.role].some(v =>
         (v || '').toLowerCase().includes(q)
       )
     );
-  }, [users, search]);
+  }, [usersWithExercises, search]);
 
   async function handleSaveRole() {
     try {
@@ -156,21 +177,21 @@ function AdminPage() {
         <div className="stat-card stat-emerald">
           <div className="stat-icon"><BookOpen size={24} /></div>
           <div>
-            <div className="stat-value">—</div>
+            <div className="stat-value">{stats && typeof stats.courses_total === 'number' ? stats.courses_total : '—'}</div>
             <div className="stat-label">Курсов</div>
           </div>
         </div>
         <div className="stat-card stat-amber">
           <div className="stat-icon"><Shield size={24} /></div>
           <div>
-            <div className="stat-value">—</div>
-            <div className="stat-label">Уязвимостей</div>
+            <div className="stat-value">{stats ? stats.exercises_total : '—'}</div>
+            <div className="stat-label">Упражнений</div>
           </div>
         </div>
         <div className="stat-card stat-blue">
           <div className="stat-icon"><TrendingUp size={24} /></div>
           <div>
-            <div className="stat-value">—</div>
+            <div className="stat-value">{stats ? stats.completed_total : '—'}</div>
             <div className="stat-label">Завершений</div>
           </div>
         </div>
@@ -195,13 +216,14 @@ function AdminPage() {
 
         {!usersLoading && !usersError && (
           <table className="data-table">
+
             <thead>
               <tr>
                 <th>Имя</th>
                 <th>Email</th>
-                <th>Роль</th>
-                <th>Упражнения</th>
-                <th>Действия</th>
+                <th className="role-col">Роль</th>
+                <th className="exercises-col">Упражнения</th>
+                <th className="actions-col">Действия</th>
               </tr>
             </thead>
             <tbody>
@@ -209,13 +231,13 @@ function AdminPage() {
                 <tr key={u.id}>
                   <td>{u.name}</td>
                   <td>{u.email}</td>
-                  <td>
+                  <td className="role-col">
                     <span className={`role-badge role-${u.role}`}>
                       {u.role}
                     </span>
                   </td>
-                  <td>{u.exercises}</td>
-                  <td>
+                  <td className="exercises-col">{u.exercises}</td>
+                  <td className="actions-col">
                     <div className="action-buttons">
                       <button
                         className="action-btn"
