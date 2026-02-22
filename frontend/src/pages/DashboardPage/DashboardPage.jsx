@@ -21,6 +21,7 @@ import { Button } from '../../components/ui/Button/Button';
 
 import './DashboardPage.css';
 import { getActivityFeed } from '../../services/activityApi';
+import { getAllVulnerabilitiesProgress } from '../../services/api';
 
 function getUserFromStorage() {
   try {
@@ -36,6 +37,36 @@ function DashboardPage() {
   const [activityFeed, setActivityFeed] = useState([]);
   const [loadingFeed, setLoadingFeed] = useState(true);
   const [feedError, setFeedError] = useState(null);
+
+  const [courses, setCourses] = useState([]);
+  const [loadingCourses, setLoadingCourses] = useState(true);
+  const [coursesError, setCoursesError] = useState(null);
+
+  useEffect(() => {
+    async function fetchCourses() {
+      setLoadingCourses(true);
+      setCoursesError(null);
+      try {
+        const data = await getAllVulnerabilitiesProgress();
+        const mappedCourses = data.map(item => ({
+          title: item.title,
+          description: item.description,
+          progress: item.percent,
+          modules: item.total,
+          completed: item.completed,
+          difficulty: item.difficulty,
+          color: item.color,
+          path: '/exercises/' + item.code
+        }));
+        setCourses(mappedCourses);
+      } catch (err) {
+        setCoursesError(err.message);
+      } finally {
+        setLoadingCourses(false);
+      }
+    }
+    fetchCourses();
+  }, []);
 
   useEffect(() => {
     async function fetchFeed() {
@@ -86,39 +117,6 @@ function DashboardPage() {
     { label: 'Текущий уровень', value: level, color: 'emerald' },
     { label: 'Опыт (XP)', value: experience, color: 'amber' },
     { label: 'Часов обучения', value: study_hours, color: 'blue' }
-  ];
-
-  const courses = [
-    {
-      title: 'SQL Injection',
-      description: 'Внедрение вредоносного SQL-кода в запросы к базе данных.',
-      progress: 33,
-      modules: 12,
-      completed: 4,
-      difficulty: 'Medium',
-      color: 'blue',
-      path: '/exercises/sql'
-    },
-    {
-      title: 'Cross-Site Scripting',
-      description: 'Внедрение вредоносных скриптов на веб-страницы.',
-      progress: 13,
-      modules: 15,
-      completed: 2,
-      difficulty: 'Easy',
-      color: 'emerald',
-      path: '/exercises/xss'
-    },
-    {
-      title: 'Remote Code Execution',
-      description: 'Удаленное выполнение кода на сервере.',
-      progress: 0,
-      modules: 10,
-      completed: 0,
-      difficulty: 'Hard',
-      color: 'red',
-      path: '/exercises/rce'
-    }
   ];
 
   return (
@@ -176,40 +174,48 @@ function DashboardPage() {
         </div>
 
         <div className="courses-grid">
-          {courses.map((course, i) => (
-            <div key={i} className={`course-card course-${course.color}`}>
-              <div className="course-header">
-                <h3>{course.title}</h3>
-                <span
-                  className={`difficulty difficulty-${course.difficulty.toLowerCase()}`}
-                >
-                  {course.difficulty}
-                </span>
-              </div>
-
-              <p className="course-description">{course.description}</p>
-
-              <div className="course-progress">
-                <div className="progress-info">
-                  <span>
-                    {course.completed}/{course.modules} модулей
+          {loadingCourses ? (
+             <div style={{ padding: '20px' }}>Загрузка задач...</div>
+          ) : coursesError ? (
+             <div style={{ padding: '20px', color: 'red' }}>{coursesError}</div>
+          ) : courses.length === 0 ? (
+             <div style={{ padding: '20px' }}>Нет активных задач</div>
+          ) : (
+            courses.map((course, i) => (
+              <div key={i} className={`course-card course-${course.color}`}>
+                <div className="course-header">
+                  <h3>{course.title}</h3>
+                  <span
+                    className={`difficulty difficulty-${course.difficulty.toLowerCase()}`}
+                  >
+                    {course.difficulty}
                   </span>
-                  <span>{course.progress}%</span>
                 </div>
 
-                <div className="progress-bar">
-                  <div
-                    className="progress-fill"
-                    style={{ width: `${course.progress}%` }}
-                  />
+                <p className="course-description">{course.description}</p>
+
+                <div className="course-progress">
+                  <div className="progress-info">
+                    <span>
+                      {course.completed}/{course.modules} модулей
+                    </span>
+                    <span>{course.progress}%</span>
+                  </div>
+
+                  <div className="progress-bar">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${course.progress}%` }}
+                    />
+                  </div>
                 </div>
+
+                <Button size="sm" onClick={() => navigate(course.path)}>
+                  {course.progress > 0 ? 'Продолжить' : 'Начать'}
+                </Button>
               </div>
-
-              <Button size="sm" onClick={() => navigate(course.path)}>
-                {course.progress > 0 ? 'Продолжить' : 'Начать'}
-              </Button>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </section>
 

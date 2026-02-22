@@ -27,6 +27,36 @@ async function getProgressByVulnerability(userId, code) {
   };
 }
 
+async function getAllProgress(userId) {
+  const [rows] = await db.query(
+    `
+    SELECT
+      v.id,
+      v.code,
+      v.title,
+      v.description,
+      COUNT(e.id) AS total,
+      COUNT(ue.exercise_id) AS completed
+    FROM vulnerabilities v
+    LEFT JOIN exercises e ON v.id = e.vulnerability_id
+    LEFT JOIN user_exercises ue ON e.id = ue.exercise_id AND ue.user_id = ?
+    GROUP BY v.id, v.code, v.title, v.description
+    ORDER BY v.id
+    `,
+    [userId]
+  );
+
+  return rows.map(row => ({
+    code: row.code,
+    title: row.title,
+    description: row.description,
+    total: row.total,
+    completed: row.completed,
+    percent: row.total === 0 ? 0 : Math.round((row.completed / row.total) * 100)
+  }));
+}
+
 module.exports = {
-  getProgressByVulnerability
+  getProgressByVulnerability,
+  getAllProgress
 };

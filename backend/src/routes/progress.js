@@ -4,5 +4,6 @@ const { auth } = require('../middleware/auth');
 const progressController = require('../controllers/progressController');
 
 router.get('/vulnerability/:code', auth, progressController.getVulnerabilityProgress);
+router.get('/all', auth, progressController.getAllProgress);
 
 module.exports = router;

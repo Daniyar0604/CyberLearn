@@ -1,0 +1,23 @@
+
+> backend@1.0.0 start
+> node index.js
+
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+🚀 Server running on http://localhost:5000
+Registration error: Error
+    at PromisePool.query (/app/backend/node_modules/mysql2/lib/promise/pool.js:36:22)
+    at Object.findByEmail (/app/backend/src/models/userModel.js:50:29)
+    at Object.register (/app/backend/src/services/authService.js:17:42)
+    at register (/app/backend/src/controllers/authController.js:35:38)
+    at Layer.handleRequest (/app/backend/node_modules/router/lib/layer.js:152:17)
+    at next (/app/backend/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/app/backend/node_modules/router/lib/route.js:117:3)
+    at handle (/app/backend/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/app/backend/node_modules/router/lib/layer.js:152:17)
+    at /app/backend/node_modules/router/index.js:295:15 {
+  code: 'ECONNREFUSED',
+  errno: undefined,
+  sql: undefined,
+  sqlState: undefined,
+  sqlMessage: undefined
+}

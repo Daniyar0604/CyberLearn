@@ -56,6 +56,21 @@ export async function updateUserBio(bio) {
   return res.json();
 }
 
+export async function getAllVulnerabilitiesProgress() {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_URL}/progress/all`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  if (!res.ok) {
+    throw new Error('Не удалось загрузить общий прогресс');
+  }
+
+  return res.json();
+}
+
 
 export async function uploadAvatar(userId, file) {
   const formData = new FormData();
