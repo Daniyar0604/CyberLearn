@@ -30,12 +30,20 @@ function getUserFromStorage() {
   }
 }
 
+import {
+  getVulnerabilities,
+  getExercisesByCode,
+  getVulnerabilityProgress
+} from '../../services/api';
+
 function DashboardPage() {
   const navigate = useNavigate();
   const user = getUserFromStorage();
   const [activityFeed, setActivityFeed] = useState([]);
   const [loadingFeed, setLoadingFeed] = useState(true);
   const [feedError, setFeedError] = useState(null);
+  const [courses, setCourses] = useState([]);
+  const [loadingCourses, setLoadingCourses] = useState(true);
 
   useEffect(() => {
     async function fetchFeed() {
@@ -72,6 +80,80 @@ function DashboardPage() {
     fetchFeed();
   }, []);
 
+  useEffect(() => {
+    async function loadCourses() {
+      setLoadingCourses(true);
+      try {
+        const data = await getVulnerabilities();
+        const safeData = Array.isArray(data) ? data : [];
+        const token = localStorage.getItem('token');
+
+        const UI_MAP = {
+          sql: {
+            color: 'blue',
+            difficulty: 'Medium',
+          },
+          xss: {
+            color: 'emerald',
+            difficulty: 'Easy',
+          },
+          csrf: {
+            color: 'amber',
+            difficulty: 'Medium',
+          },
+          rce: {
+            color: 'red',
+            difficulty: 'Hard',
+          }
+        };
+
+        const withProgress = await Promise.all(
+          safeData.map(async vuln => {
+            const ui = UI_MAP[vuln.code] || { color: 'gray', difficulty: 'Medium' };
+            let modules = 0;
+            let completed = 0;
+            let progress = 0;
+            try {
+              const exercises = await getExercisesByCode(vuln.code);
+              modules = exercises.length;
+              if (token) {
+                const prog = await getVulnerabilityProgress(vuln.code);
+                completed = Number(prog.completed) || 0;
+                if (prog.progress !== undefined && prog.progress !== null) {
+                  progress = Number(prog.progress) || 0;
+                } else if (prog.total) {
+                  progress = Math.round((completed / prog.total) * 100);
+                } else if (modules > 0) {
+                  progress = Math.round((completed / modules) * 100);
+                } else {
+                  progress = 0;
+                }
+              }
+            } catch (e) {
+              // fallback: no progress
+            }
+            return {
+              title: vuln.title,
+              description: vuln.description,
+              progress,
+              modules,
+              completed,
+              difficulty: ui.difficulty,
+              color: ui.color,
+              path: `/exercises/${vuln.code}`
+            };
+          })
+        );
+        setCourses(withProgress);
+      } catch (e) {
+        setCourses([]);
+      } finally {
+        setLoadingCourses(false);
+      }
+    }
+    loadCourses();
+  }, []);
+
   const {
     username = '',
     completed_courses = 0,
@@ -86,39 +168,6 @@ function DashboardPage() {
     { label: 'Текущий уровень', value: level, color: 'emerald' },
     { label: 'Опыт (XP)', value: experience, color: 'amber' },
     { label: 'Часов обучения', value: study_hours, color: 'blue' }
-  ];
-
-  const courses = [
-    {
-      title: 'SQL Injection',
-      description: 'Внедрение вредоносного SQL-кода в запросы к базе данных.',
-      progress: 33,
-      modules: 12,
-      completed: 4,
-      difficulty: 'Medium',
-      color: 'blue',
-      path: '/exercises/sql'
-    },
-    {
-      title: 'Cross-Site Scripting',
-      description: 'Внедрение вредоносных скриптов на веб-страницы.',
-      progress: 13,
-      modules: 15,
-      completed: 2,
-      difficulty: 'Easy',
-      color: 'emerald',
-      path: '/exercises/xss'
-    },
-    {
-      title: 'Remote Code Execution',
-      description: 'Удаленное выполнение кода на сервере.',
-      progress: 0,
-      modules: 10,
-      completed: 0,
-      difficulty: 'Hard',
-      color: 'red',
-      path: '/exercises/rce'
-    }
   ];
 
   return (
