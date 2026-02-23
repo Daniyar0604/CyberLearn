@@ -424,3 +424,54 @@
     overflow-x: auto;
   }
 }
+
+/* NEW TABLE STYLES */
+.exercises-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #0f172a;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.exercises-table th,
+.exercises-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+}
+
+.exercises-table th {
+  background: rgba(30, 41, 59, 0.5);
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.exercises-table tr:last-child td {
+  border-bottom: none;
+}
+
+.exercises-table tr:hover {
+  background: rgba(30, 41, 59, 0.3);
+}
+
+.congrats-message {
+  text-align: center;
+  padding: 3rem;
+  background: #0f172a;
+  border-radius: 1rem;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.sort-select {
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-left: 1rem;
+  cursor: pointer;
+}

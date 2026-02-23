@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Search } from 'lucide-react';
-import { Bar, Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,6 +20,7 @@ import { Button } from '../../components/ui/Button/Button';
 
 import './DashboardPage.css';
 import { getActivityFeed } from '../../services/activityApi';
+import { getAllExercisesStatus } from '../../services/api';
 
 function getUserFromStorage() {
   try {
@@ -30,20 +30,16 @@ function getUserFromStorage() {
   }
 }
 
-import {
-  getVulnerabilities,
-  getExercisesByCode,
-  getVulnerabilityProgress
-} from '../../services/api';
-
 function DashboardPage() {
   const navigate = useNavigate();
   const user = getUserFromStorage();
   const [activityFeed, setActivityFeed] = useState([]);
   const [loadingFeed, setLoadingFeed] = useState(true);
   const [feedError, setFeedError] = useState(null);
-  const [courses, setCourses] = useState([]);
-  const [loadingCourses, setLoadingCourses] = useState(true);
+
+  const [exercises, setExercises] = useState([]);
+  const [loadingExercises, setLoadingExercises] = useState(true);
+  const [sortBy, setSortBy] = useState('order'); // 'order' | 'difficulty'
 
   useEffect(() => {
     async function fetchFeed() {
@@ -51,7 +47,6 @@ function DashboardPage() {
       setFeedError(null);
       try {
         const feedData = await getActivityFeed();
-        // Backend now returns feed array already sorted
         const allActivities = (feedData.feed || []).map(item => {
           if (item.type === 'module') {
             return {
@@ -81,77 +76,19 @@ function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    async function loadCourses() {
-      setLoadingCourses(true);
+    async function loadExercises() {
+      setLoadingExercises(true);
       try {
-        const data = await getVulnerabilities();
-        const safeData = Array.isArray(data) ? data : [];
-        const token = localStorage.getItem('token');
-
-        const UI_MAP = {
-          sql: {
-            color: 'blue',
-            difficulty: 'Medium',
-          },
-          xss: {
-            color: 'emerald',
-            difficulty: 'Easy',
-          },
-          csrf: {
-            color: 'amber',
-            difficulty: 'Medium',
-          },
-          rce: {
-            color: 'red',
-            difficulty: 'Hard',
-          }
-        };
-
-        const withProgress = await Promise.all(
-          safeData.map(async vuln => {
-            const ui = UI_MAP[vuln.code] || { color: 'gray', difficulty: 'Medium' };
-            let modules = 0;
-            let completed = 0;
-            let progress = 0;
-            try {
-              const exercises = await getExercisesByCode(vuln.code);
-              modules = exercises.length;
-              if (token) {
-                const prog = await getVulnerabilityProgress(vuln.code);
-                completed = Number(prog.completed) || 0;
-                if (prog.progress !== undefined && prog.progress !== null) {
-                  progress = Number(prog.progress) || 0;
-                } else if (prog.total) {
-                  progress = Math.round((completed / prog.total) * 100);
-                } else if (modules > 0) {
-                  progress = Math.round((completed / modules) * 100);
-                } else {
-                  progress = 0;
-                }
-              }
-            } catch (e) {
-              // fallback: no progress
-            }
-            return {
-              title: vuln.title,
-              description: vuln.description,
-              progress,
-              modules,
-              completed,
-              difficulty: ui.difficulty,
-              color: ui.color,
-              path: `/exercises/${vuln.code}`
-            };
-          })
-        );
-        setCourses(withProgress);
+        const data = await getAllExercisesStatus();
+        setExercises(Array.isArray(data) ? data : []);
       } catch (e) {
-        setCourses([]);
+        console.error("Failed to load exercises:", e);
+        setExercises([]);
       } finally {
-        setLoadingCourses(false);
+        setLoadingExercises(false);
       }
     }
-    loadCourses();
+    loadExercises();
   }, []);
 
   const {
@@ -169,6 +106,22 @@ function DashboardPage() {
     { label: 'Опыт (XP)', value: experience, color: 'amber' },
     { label: 'Часов обучения', value: study_hours, color: 'blue' }
   ];
+
+  // Logic for exercises table
+  // Filter only incomplete exercises (is_completed === 0)
+  const incompleteExercises = exercises.filter(ex => !ex.is_completed);
+
+  const sortedExercises = [...incompleteExercises].sort((a, b) => {
+    if (sortBy === 'difficulty') {
+      const diffOrder = { 'Easy': 1, 'Medium': 2, 'Hard': 3 };
+      const da = diffOrder[a.difficulty] || 99;
+      const db = diffOrder[b.difficulty] || 99;
+      return da - db;
+    }
+    // Default: by order (Backend returns sorted by vulnerability ID and order_index)
+    // We can rely on original index if we want absolute stability or just keep array order
+    return 0;
+  });
 
   return (
     <AppLayout>
@@ -215,51 +168,64 @@ function DashboardPage() {
         ))}
       </div>
 
-     
-
-      {/* COURSES */}
+      {/* EXERCISES TABLE SECTION */}
       <section className="courses-section">
         <div className="section-header">
           <h2>Активные задачи</h2>
-          <button className="view-all-btn">Все категории</button>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span style={{ color: '#94a3b8', fontSize: '0.875rem' }}>Сортировать по:</span>
+            <select
+              className="sort-select"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="order">Порядку</option>
+              <option value="difficulty">Сложности</option>
+            </select>
+          </div>
         </div>
 
-        <div className="courses-grid">
-          {courses.map((course, i) => (
-            <div key={i} className={`course-card course-${course.color}`}>
-              <div className="course-header">
-                <h3>{course.title}</h3>
-                <span
-                  className={`difficulty difficulty-${course.difficulty.toLowerCase()}`}
-                >
-                  {course.difficulty}
-                </span>
-              </div>
-
-              <p className="course-description">{course.description}</p>
-
-              <div className="course-progress">
-                <div className="progress-info">
-                  <span>
-                    {course.completed}/{course.modules} модулей
-                  </span>
-                  <span>{course.progress}%</span>
-                </div>
-
-                <div className="progress-bar">
-                  <div
-                    className="progress-fill"
-                    style={{ width: `${course.progress}%` }}
-                  />
-                </div>
-              </div>
-
-              <Button size="sm" onClick={() => navigate(course.path)}>
-                {course.progress > 0 ? 'Продолжить' : 'Начать'}
-              </Button>
-            </div>
-          ))}
-        </div>
+        {loadingExercises ? (
+          <div style={{ color: '#94a3b8' }}>Загрузка задач...</div>
+        ) : incompleteExercises.length === 0 ? (
+          <div className="congrats-message">
+            🎉 Поздравляем! Все задачи выполнены!
+          </div>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table className="exercises-table">
+              <thead>
+                <tr>
+                  <th>Название</th>
+                  <th>Категория</th>
+                  <th>Сложность</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedExercises.map((ex) => (
+                  <tr key={ex.id}>
+                    <td>{ex.title}</td>
+                    <td>{ex.vulnerability_title}</td>
+                    <td>
+                      <span className={`difficulty difficulty-${(ex.difficulty || '').toLowerCase()}`}>
+                        {ex.difficulty}
+                      </span>
+                    </td>
+                    <td>
+                      <Button
+                        size="sm"
+                        onClick={() => navigate(`/exercises/${ex.vulnerability_code}/${ex.order_index}`)}
+                      >
+                        Начать
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
 
       {/* ACTIVITY */}
@@ -282,7 +248,6 @@ function DashboardPage() {
                 <div className="activity-content">
                   <div className="activity-title">
                     {activity.action}: {activity.title}
-                    {/* Only show course name for module completion */}
                     {activity.type === 'module' && activity.course ? (
                       <span style={{ color: '#94a3b8', marginLeft: 4 }}>
                         ({activity.course})
@@ -292,7 +257,6 @@ function DashboardPage() {
                   <div className="activity-time">
                     {(() => {
                       const d = new Date(activity.time);
-                      // Remove seconds
                       return d.toLocaleString(undefined, {
                         hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric'
                       });

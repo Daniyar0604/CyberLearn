@@ -49,8 +49,13 @@ async function getByOrderWithStatus(code, order, userId) {
   };
 }
 
+async function getAllWithStatus(userId) {
+  return await exerciseModel.findAllWithStatus(userId);
+}
+
 module.exports = {
   getByOrder,
   getAllByCode,
-  getByOrderWithStatus
+  getByOrderWithStatus,
+  getAllWithStatus
 };

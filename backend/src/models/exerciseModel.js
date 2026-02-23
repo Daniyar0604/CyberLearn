@@ -38,8 +38,32 @@ async function findById(conn, exerciseId) {
   return rows[0];
 }
 
+async function findAllWithStatus(userId) {
+  const [rows] = await db.query(
+    `
+    SELECT
+      e.id,
+      e.title,
+      e.difficulty,
+      e.order_index,
+      v.title AS vulnerability_title,
+      v.code AS vulnerability_code,
+      CASE WHEN ue.user_id IS NOT NULL THEN 1 ELSE 0 END AS is_completed
+    FROM exercises e
+    JOIN vulnerabilities v ON e.vulnerability_id = v.id
+    LEFT JOIN user_exercises ue
+      ON ue.exercise_id = e.id
+      AND ue.user_id = ?
+    ORDER BY v.id ASC, e.order_index ASC
+    `,
+    [userId]
+  );
+  return rows;
+}
+
 module.exports = {
   findByCodeAndOrder,
   findAllByCode,
-  findById
+  findById,
+  findAllWithStatus
 };

@@ -42,7 +42,18 @@ async function getAllByCode(req, res) {
   }
 }
 
+async function getAllStatus(req, res) {
+  try {
+    const userId = req.user.id;
+    const exercises = await exerciseService.getAllWithStatus(userId);
+    res.json(exercises);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
 module.exports = {
   getByOrder,
-  getAllByCode
+  getAllByCode,
+  getAllStatus
 };

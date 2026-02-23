@@ -56,6 +56,25 @@ export async function updateUserBio(bio) {
   return res.json();
 }
 
+export async function getAllExercisesStatus() {
+  const token = localStorage.getItem('token');
+
+  const res = await fetch(
+    `${API_URL}/exercises/status`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error('Не удалось загрузить задания');
+  }
+
+  return res.json();
+}
+
 
 export async function uploadAvatar(userId, file) {
   const formData = new FormData();
