@@ -40,6 +40,7 @@ function DashboardPage() {
   const [exercises, setExercises] = useState([]);
   const [loadingExercises, setLoadingExercises] = useState(true);
   const [sortBy, setSortBy] = useState('order'); // 'order' | 'difficulty'
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     async function fetchFeed() {
@@ -172,16 +173,26 @@ function DashboardPage() {
       <section className="courses-section">
         <div className="section-header">
           <h2>Активные задачи</h2>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ color: '#94a3b8', fontSize: '0.875rem' }}>Сортировать по:</span>
-            <select
-              className="sort-select"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ color: '#94a3b8', fontSize: '0.875rem' }}>Сортировать по:</span>
+              <select
+                className="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="order">Порядку</option>
+                <option value="difficulty">Сложности</option>
+              </select>
+            </div>
+
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowAll(!showAll)}
             >
-              <option value="order">Порядку</option>
-              <option value="difficulty">Сложности</option>
-            </select>
+              {showAll ? 'Свернуть' : 'Показать все'}
+            </Button>
           </div>
         </div>
 
@@ -203,7 +214,7 @@ function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {sortedExercises.slice(0, 3).map((ex) => (
+                {(showAll ? sortedExercises : sortedExercises.slice(0, 3)).map((ex) => (
                   <tr key={ex.id}>
                     <td>{ex.title}</td>
                     <td>{ex.vulnerability_title}</td>
