@@ -41,7 +41,22 @@ async function addStudyTime(userId, minutes) {
   await UserModel.incrementStudyTime(userId, minutes);
 }
 
+async function getMyRating(userId) {
+  const rating = await UserModel.getUserRating(userId);
+
+  if (!rating) {
+    throw new Error('User not found');
+  }
+
+  return {
+    rank: Number(rating.rank_position || 0),
+    totalParticipants: Number(rating.total_participants || 0),
+    completedExercises: Number(rating.completed_count || 0)
+  };
+}
+
 module.exports = {
   getMe,
   addStudyTime,
+  getMyRating,
 };

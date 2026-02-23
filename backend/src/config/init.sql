@@ -503,3 +503,5 @@ CREATE TABLE IF NOT EXISTS user_exercises (
 );
 
 select * from user_exercises;
+
+DELETE FROM user_exercises WHERE user_id = 6;

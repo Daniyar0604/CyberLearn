@@ -20,7 +20,7 @@ import { Button } from '../../components/ui/Button/Button';
 
 import './DashboardPage.css';
 import { getActivityFeed } from '../../services/activityApi';
-import { getAllExercisesStatus } from '../../services/api';
+import { getAllExercisesStatus, getMyRating } from '../../services/api';
 
 function getUserFromStorage() {
   try {
@@ -41,6 +41,8 @@ function DashboardPage() {
   const [loadingExercises, setLoadingExercises] = useState(true);
   const [sortBy, setSortBy] = useState('order'); // 'order' | 'difficulty'
   const [showAll, setShowAll] = useState(false);
+  const [rating, setRating] = useState({ rank: 0, totalParticipants: 0 });
+  const [loadingRating, setLoadingRating] = useState(true);
 
   useEffect(() => {
     async function fetchFeed() {
@@ -92,19 +94,42 @@ function DashboardPage() {
     loadExercises();
   }, []);
 
+  useEffect(() => {
+    async function loadRating() {
+      setLoadingRating(true);
+      try {
+        const data = await getMyRating();
+        setRating({
+          rank: Number(data?.rank || 0),
+          totalParticipants: Number(data?.totalParticipants || 0),
+        });
+      } catch (e) {
+        console.error('Failed to load rating:', e);
+        setRating({ rank: 0, totalParticipants: 0 });
+      } finally {
+        setLoadingRating(false);
+      }
+    }
+
+    loadRating();
+  }, []);
+
   const {
     username = '',
     completed_courses = 0,
     level = 0,
-    experience = 0,
     study_hours = 0,
     avatar
   } = user;
 
+  const ratingValue = loadingRating
+    ? '...'
+    : `${rating.rank || 0}/${rating.totalParticipants || 0}`;
+
   const stats = [
     { label: 'Завершено курсов', value: completed_courses, color: 'violet' },
     { label: 'Текущий уровень', value: level, color: 'emerald' },
-    { label: 'Опыт (XP)', value: experience, color: 'amber' },
+    { label: 'Рейтинг', value: ratingValue, color: 'amber' },
     { label: 'Часов обучения', value: study_hours, color: 'blue' }
   ];
 

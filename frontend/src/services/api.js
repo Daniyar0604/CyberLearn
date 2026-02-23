@@ -233,6 +233,20 @@ export async function getMe() {
   return res.json();
 }
 
+export async function getMyRating() {
+  const res = await fetch('http://localhost:5000/api/users/rating', {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to load rating');
+  }
+
+  return res.json();
+}
+
 export async function completeExercise(exerciseId) {
   return fetch(`/api/exercises/${exerciseId}/complete`, {
     method: 'POST',

@@ -135,6 +135,64 @@ const UserModel = {
       [minutes, userId]
     );
   },
+
+  async getUserRating(userId) {
+    const [rows] = await db.query(
+      `
+      SELECT
+        target.id AS user_id,
+        ranked.completed_count,
+        ranked.rank_position,
+        totals.total_participants
+      FROM users target
+      CROSS JOIN (
+        SELECT COUNT(*) AS total_participants
+        FROM users
+        WHERE role = 'user'
+      ) totals
+      LEFT JOIN (
+        SELECT
+          uc.user_id,
+          uc.completed_count,
+          (
+            SELECT COUNT(*) + 1
+            FROM (
+              SELECT
+                u2.id AS user_id,
+                COUNT(ue2.exercise_id) AS completed_count
+              FROM users u2
+              LEFT JOIN user_exercises ue2
+                ON ue2.user_id = u2.id
+              WHERE u2.role = 'user'
+              GROUP BY u2.id
+            ) leaderboard
+            WHERE leaderboard.completed_count > uc.completed_count
+               OR (
+                 leaderboard.completed_count = uc.completed_count
+                 AND leaderboard.user_id < uc.user_id
+               )
+          ) AS rank_position
+        FROM (
+          SELECT
+            u.id AS user_id,
+            COUNT(ue.exercise_id) AS completed_count
+          FROM users u
+          LEFT JOIN user_exercises ue
+            ON ue.user_id = u.id
+          WHERE u.role = 'user'
+          GROUP BY u.id
+        ) uc
+      ) ranked
+        ON ranked.user_id = target.id
+      WHERE target.id = ?
+      LIMIT 1
+      `,
+      [userId]
+    );
+
+    return rows[0];
+  },
+
 };
 
 module.exports = UserModel;

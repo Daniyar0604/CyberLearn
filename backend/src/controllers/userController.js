@@ -35,8 +35,19 @@ async function addStudyTime(req, res) {
   }
 }
 
+async function getMyRating(req, res) {
+  try {
+    const rating = await userService.getMyRating(req.user.id);
+    res.json(rating);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to get user rating' });
+  }
+}
+
 module.exports = {
   getMe,
   addStudyTime,
+  getMyRating,
 };
 
