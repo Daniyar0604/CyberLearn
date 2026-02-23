@@ -112,11 +112,33 @@ function DashboardPage() {
   // Filter only incomplete exercises (is_completed === 0)
   const incompleteExercises = exercises.filter(ex => !ex.is_completed);
 
+  const getDifficultyKey = (diff) => {
+    if (!diff) return 'unknown';
+    const d = diff.toLowerCase();
+    if (d === 'easy' || d === 'beginner') return 'easy';
+    if (d === 'medium' || d === 'intermediate') return 'medium';
+    if (d === 'hard' || d === 'advanced') return 'hard';
+    return 'unknown';
+  };
+
+  const difficultyRu = {
+    'easy': 'Легкий',
+    'medium': 'Средний',
+    'hard': 'Сложный',
+    'unknown': 'Неизвестно'
+  };
+
+  const difficultyOrder = {
+    'easy': 1,
+    'medium': 2,
+    'hard': 3,
+    'unknown': 99
+  };
+
   const sortedExercises = [...incompleteExercises].sort((a, b) => {
     if (sortBy === 'difficulty') {
-      const diffOrder = { 'Easy': 1, 'Medium': 2, 'Hard': 3 };
-      const da = diffOrder[a.difficulty] || 99;
-      const db = diffOrder[b.difficulty] || 99;
+      const da = difficultyOrder[getDifficultyKey(a.difficulty)];
+      const db = difficultyOrder[getDifficultyKey(b.difficulty)];
       return da - db;
     }
     // Default: by order (Backend returns sorted by vulnerability ID and order_index)
@@ -219,8 +241,8 @@ function DashboardPage() {
                     <td>{ex.title}</td>
                     <td>{ex.vulnerability_title}</td>
                     <td>
-                      <span className={`difficulty difficulty-${(ex.difficulty || '').toLowerCase()}`}>
-                        {ex.difficulty}
+                      <span className={`difficulty difficulty-${getDifficultyKey(ex.difficulty)}`}>
+                        {difficultyRu[getDifficultyKey(ex.difficulty)] || ex.difficulty}
                       </span>
                     </td>
                     <td>
