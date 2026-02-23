@@ -203,7 +203,7 @@ function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                {sortedExercises.map((ex) => (
+                {sortedExercises.slice(0, 3).map((ex) => (
                   <tr key={ex.id}>
                     <td>{ex.title}</td>
                     <td>{ex.vulnerability_title}</td>
