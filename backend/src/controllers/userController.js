@@ -48,6 +48,5 @@ async function getMyRating(req, res) {
 module.exports = {
   getMe,
   addStudyTime,
-  getMyRating,
+  getMyRating
 };
-

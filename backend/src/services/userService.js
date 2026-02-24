@@ -8,8 +8,7 @@ async function getMe(userId) {
     throw new Error('User not found');
   }
 
-  const completedExercises =
-    await userExerciseModel.countByUser(userId);
+  const completedExercises = await userExerciseModel.countByUser(userId);
 
   return {
     id: user.id,
@@ -21,7 +20,7 @@ async function getMe(userId) {
     level: user.level,
     study_hours: user.study_hours,
     completed_exercises: completedExercises,
-    created_at: user.created_at,
+    created_at: user.created_at
   };
 }
 
@@ -58,5 +57,5 @@ async function getMyRating(userId) {
 module.exports = {
   getMe,
   addStudyTime,
-  getMyRating,
+  getMyRating
 };

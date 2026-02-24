@@ -15,15 +15,11 @@ async function getByOrder(req, res) {
   try {
     const userId = req.user.id;
 
-    const exercise = await exerciseService.getByOrderWithStatus(
-      code,
-      orderIndex,
-      userId
-    );
+    const exercise = await exerciseService.getByOrderWithStatus(code, orderIndex, userId);
 
     res.json(exercise);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(err.status || 404).json({ message: err.message });
   }
 }
 
@@ -38,7 +34,7 @@ async function getAllByCode(req, res) {
     const exercises = await exerciseService.getAllByCode(code);
     res.json(exercises);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(err.status || 404).json({ message: err.message });
   }
 }
 

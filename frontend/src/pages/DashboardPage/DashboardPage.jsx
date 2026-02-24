@@ -1,19 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Search } from 'lucide-react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-} from 'chart.js';
-ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
-
 import AppLayout from '../../components/layout/AppLayout';
 import { Input } from '../../components/ui/Input/Input';
 import { Button } from '../../components/ui/Button/Button';
@@ -173,7 +160,8 @@ function DashboardPage() {
 
   return (
     <AppLayout>
-      {/* HEADER */}
+      <div className="dashboard-content">
+        {/* HEADER */}
       <header className="dashboard-header">
         <div>
           <h1 className="dashboard-title">Привет, {username}! 👋</h1>
@@ -220,9 +208,9 @@ function DashboardPage() {
       <section className="courses-section">
         <div className="section-header">
           <h2>Активные задачи</h2>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ color: '#94a3b8', fontSize: '0.875rem' }}>Сортировать по:</span>
+          <div className="section-tools">
+            <div className="sort-control">
+              <span className="sort-label">Сортировать по:</span>
               <select
                 className="sort-select"
                 value={sortBy}
@@ -244,13 +232,13 @@ function DashboardPage() {
         </div>
 
         {loadingExercises ? (
-          <div style={{ color: '#94a3b8' }}>Загрузка задач...</div>
+          <div className="section-loading">Загрузка задач...</div>
         ) : incompleteExercises.length === 0 ? (
           <div className="congrats-message">
             🎉 Поздравляем! Все задачи выполнены!
           </div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
+          <div className="table-scroll">
             <table className="exercises-table">
               <thead>
                 <tr>
@@ -307,7 +295,7 @@ function DashboardPage() {
                   <div className="activity-title">
                     {activity.action}: {activity.title}
                     {activity.type === 'module' && activity.course ? (
-                      <span style={{ color: '#94a3b8', marginLeft: 4 }}>
+                      <span className="activity-course">
                         ({activity.course})
                       </span>
                     ) : null}
@@ -326,6 +314,7 @@ function DashboardPage() {
           )}
         </div>
       </section>
+      </div>
     </AppLayout>
   );
 }

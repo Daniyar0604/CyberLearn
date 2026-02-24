@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Database,
+import { Database,
   Globe,
   ShieldAlert,
   Terminal,
@@ -13,15 +12,11 @@ import {
 import AppLayout from '../../components/layout/AppLayout';
 import { Input } from '../../components/ui/Input/Input';
 import { Button } from '../../components/ui/Button/Button';
-import {
-  getVulnerabilities,
+import { getVulnerabilities,
   getExercisesByCode,
   getVulnerabilityProgress
 } from '../../services/api';
 
-/**
- * code → UI
- */
 const UI_MAP = {
   sql: {
     category: 'database',
@@ -67,44 +62,39 @@ function VulnerabilitiesPage() {
         const withProgress = await Promise.all(
           safeData.map(async vuln => {
             const ui = UI_MAP[vuln.code] || {};
+            const isFrozen = Number(vuln.is_frozen) === 1;
 
             let modules = 0;
             let completed = 0;
             let progress = 0;
 
-            try {
-              // всего упражнений
-              const exercises = await getExercisesByCode(vuln.code);
-              modules = exercises.length;
+            if (!isFrozen) {
+              try {
+                const exercises = await getExercisesByCode(vuln.code);
+                modules = exercises.length;
 
-              // прогресс пользователя
-              if (token) {
-  const prog = await getVulnerabilityProgress(vuln.code);
+                if (token) {
+                  const prog = await getVulnerabilityProgress(vuln.code);
+                  completed = Number(prog.completed) || 0;
 
-  completed = Number(prog.completed) || 0;
-
-  // если backend вернул progress — используем
-  if (prog.progress !== undefined && prog.progress !== null) {
-    progress = Number(prog.progress) || 0;
-  }
-  // если backend вернул total
-  else if (prog.total) {
-    progress = Math.round((completed / prog.total) * 100);
-  }
-  // fallback — считаем от общего числа модулей
-  else if (modules > 0) {
-    progress = Math.round((completed / modules) * 100);
-  } else {
-    progress = 0;
-  }
-}
-
-            } catch (e) {
-              console.warn(`Прогресс для ${vuln.code} не загружен`);
+                  if (prog.progress !== undefined && prog.progress !== null) {
+                    progress = Number(prog.progress) || 0;
+                  } else if (prog.total) {
+                    progress = Math.round((completed / prog.total) * 100);
+                  } else if (modules > 0) {
+                    progress = Math.round((completed / modules) * 100);
+                  } else {
+                    progress = 0;
+                  }
+                }
+              } catch (e) {
+                console.warn(`Прогресс для ${vuln.code} не загружен`);
+              }
             }
 
             return {
               ...vuln,
+              is_frozen: isFrozen,
               category: ui.category || 'other',
               icon: ui.icon || null,
               color: ui.color || 'gray',
@@ -176,7 +166,6 @@ function VulnerabilitiesPage() {
 
   return (
     <AppLayout>
-      {/* HEADER */}
       <header className="vulnerabilities-header">
         <div>
           <h1 className="page-title">Каталог уязвимостей</h1>
@@ -199,7 +188,6 @@ function VulnerabilitiesPage() {
         </div>
       </header>
 
-      {/* CATEGORIES */}
       <div className="categories-filter">
         {categories.map(cat => (
           <button
@@ -215,29 +203,32 @@ function VulnerabilitiesPage() {
         ))}
       </div>
 
-      {/* EMPTY */}
       {filteredVulnerabilities.length === 0 && (
         <div className="empty-state">Уязвимости не найдены</div>
       )}
 
-      {/* GRID */}
       <div className="vulnerabilities-grid">
         {filteredVulnerabilities.map(vuln => (
           <div
             key={vuln.id}
-            className={`vulnerability-card vuln-${vuln.color}`}
+            className={`vulnerability-card vuln-${vuln.color} ${vuln.is_frozen ? 'vuln-frozen' : ''}`}
           >
             <div className="vuln-header">
               <div className={`vuln-icon vuln-icon-${vuln.color}`}>
                 {vuln.icon}
               </div>
 
-              <span className={`severity-badge severity-${vuln.severity}`}>
-                {vuln.severity === 'critical' && 'Критическая'}
-                {vuln.severity === 'high' && 'Высокая'}
-                {vuln.severity === 'medium' && 'Средняя'}
-                {vuln.severity === 'low' && 'Низкая'}
-              </span>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                {vuln.is_frozen && (
+                  <span className="maintenance-badge">Тех. работы</span>
+                )}
+                <span className={`severity-badge severity-${vuln.severity}`}>
+                  {vuln.severity === 'critical' && 'Критическая'}
+                  {vuln.severity === 'high' && 'Высокая'}
+                  {vuln.severity === 'medium' && 'Средняя'}
+                  {vuln.severity === 'low' && 'Низкая'}
+                </span>
+              </div>
             </div>
 
             <h3 className="vuln-title">{vuln.title}</h3>
@@ -263,16 +254,19 @@ function VulnerabilitiesPage() {
               <Button
                 size="sm"
                 rightIcon={<ChevronRight size={16} />}
+                disabled={vuln.is_frozen}
                 onClick={() => navigate(`/exercises/${vuln.code}`)}
               >
-                {vuln.progress > 0 ? 'Продолжить' : 'Начать'}
+                {vuln.is_frozen
+                  ? 'Тех. работы'
+                  : vuln.progress > 0
+                    ? 'Продолжить'
+                    : 'Начать'}
               </Button>
 
               <button
                 className="learn-more-btn"
-                onClick={() =>
-                  navigate(`/vulnerabilities/${vuln.code}`)
-                }
+                onClick={() => navigate(`/vulnerabilities/${vuln.code}`)}
               >
                 Узнать больше
               </button>

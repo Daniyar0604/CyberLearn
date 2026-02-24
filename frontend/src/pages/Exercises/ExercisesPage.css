@@ -42,6 +42,16 @@
   line-height: 1.6;
 }
 
+.course-maintenance-banner {
+  margin-bottom: 1.2rem;
+  border: 1px solid rgba(245, 158, 11, 0.34);
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
 /* ================= LIST ================= */
 
 .exercises-list {
@@ -66,6 +76,11 @@
 .exercise-row:hover {
   border-color: rgba(124, 58, 237, 0.5);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+}
+
+.exercise-row.exercise-row-frozen {
+  border-color: rgba(245, 158, 11, 0.34);
+  background: rgba(245, 158, 11, 0.08);
 }
 
 /* ================= LEFT ================= */

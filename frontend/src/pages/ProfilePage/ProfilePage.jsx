@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, Edit2 } from 'lucide-react';
 
 import AppLayout from '../../components/layout/AppLayout';
 import { Button } from '../../components/ui/Button/Button';
-import {
-  updateUserBio,
+import { updateUserBio,
   uploadAvatar,
   getMe,
 } from '../../services/api';

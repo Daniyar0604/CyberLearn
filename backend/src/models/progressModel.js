@@ -13,6 +13,8 @@ async function getProgressByVulnerability(userId, code) {
     JOIN vulnerabilities v
       ON v.id = e.vulnerability_id
     WHERE v.code = ?
+      AND v.is_frozen = 0
+      AND e.is_frozen = 0
     `,
     [userId, code]
   );

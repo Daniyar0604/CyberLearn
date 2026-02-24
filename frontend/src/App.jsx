@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import {
-  BrowserRouter,
+import { useEffect } from 'react';
+import { BrowserRouter,
   Routes,
   Route,
   Navigate,

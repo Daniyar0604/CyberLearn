@@ -117,6 +117,15 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
+.vulnerability-card.vuln-frozen {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: linear-gradient(
+    180deg,
+    rgba(245, 158, 11, 0.08),
+    rgba(15, 23, 42, 0.94)
+  );
+}
+
 .vuln-blue:hover {
   border-color: rgba(59, 130, 246, 0.5);
 }
@@ -189,6 +198,16 @@
 .severity-medium {
   background: rgba(234, 179, 8, 0.1);
   color: #facc15;
+}
+
+.maintenance-badge {
+  padding: 0.25rem 0.7rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
 }
 
 .vuln-title {

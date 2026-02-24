@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Shield, ChevronRight, CheckCircle2, Github, Twitter, Linkedin, Mail, Database, Globe, ShieldAlert, Terminal, BookOpen, Target, Award } from 'lucide-react';
 import { Button } from '../../components/ui/Button/Button';
-import { API } from '../../services/api';
 import './LandingPage.css';
 function LandingPage() {
   const navigate = useNavigate();

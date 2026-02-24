@@ -475,3 +475,142 @@
   margin-left: 1rem;
   cursor: pointer;
 }
+
+/* Minimal Dashboard Refinement */
+.dashboard-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-content .dashboard-header {
+  padding: 0.25rem 0 1.25rem;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.24);
+}
+
+.dashboard-content .dashboard-title {
+  margin: 0;
+  letter-spacing: 0.2px;
+}
+
+.dashboard-content .dashboard-subtitle {
+  margin-top: 0.4rem;
+}
+
+.dashboard-content .stats-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.dashboard-content .stat-card {
+  border-radius: 0.9rem;
+  padding: 1.1rem 1.2rem;
+  justify-content: flex-start;
+}
+
+.dashboard-content .stat-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.32);
+}
+
+.dashboard-content .stat-content {
+  text-align: left;
+}
+
+.dashboard-content .stat-value {
+  margin-bottom: 0.2rem;
+  font-size: 1.7rem;
+}
+
+.dashboard-content .courses-section,
+.dashboard-content .activity-section {
+  background: #0f172a;
+  border: 1px solid rgba(71, 85, 105, 0.28);
+  border-radius: 1rem;
+  padding: 1rem 1.1rem;
+}
+
+.dashboard-content .section-header {
+  margin-bottom: 1rem;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.24);
+}
+
+.dashboard-content .section-header h2,
+.dashboard-content .activity-section h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.dashboard-content .section-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dashboard-content .sort-control {
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-content .sort-label {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.dashboard-content .sort-select {
+  margin-left: 0.6rem;
+}
+
+.dashboard-content .section-loading {
+  color: #94a3b8;
+  padding: 0.2rem 0 0.6rem;
+}
+
+.dashboard-content .table-scroll {
+  overflow-x: auto;
+}
+
+.dashboard-content .exercises-table {
+  border: 1px solid rgba(71, 85, 105, 0.24);
+}
+
+.dashboard-content .exercises-table th,
+.dashboard-content .exercises-table td {
+  padding: 0.85rem 0.95rem;
+}
+
+.dashboard-content .exercises-table th:last-child,
+.dashboard-content .exercises-table td:last-child {
+  text-align: right;
+}
+
+.dashboard-content .activity-section {
+  margin-top: 1.15rem;
+}
+
+.dashboard-content .activity-list {
+  gap: 0.75rem;
+  max-height: 24rem;
+}
+
+.dashboard-content .activity-item {
+  border-radius: 0.7rem;
+  padding: 0.85rem 0.95rem;
+}
+
+.dashboard-content .activity-course {
+  color: #94a3b8;
+  margin-left: 0.25rem;
+}
+
+@media (max-width: 860px) {
+  .dashboard-content .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .dashboard-content .section-tools {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

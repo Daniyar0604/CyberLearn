@@ -28,7 +28,7 @@ const AuthController = {
 
       if (!username || !email || !password) {
         return res.status(400).json({
-          message: 'All fields are required',
+          message: 'All fields are required'
         });
       }
 
@@ -40,11 +40,11 @@ const AuthController = {
 
       return res.status(201).json({
         message: 'User registered successfully',
-        user,
+        user
       });
     } catch (error) {
       return res.status(400).json({
-        message: error.message,
+        message: error.message
       });
     }
   },
@@ -56,26 +56,26 @@ const AuthController = {
 
       if (!email || !password) {
         return res.status(400).json({
-          message: 'Email and password are required',
+          message: 'Email and password are required'
         });
       }
 
       const { token, user } = await AuthService.login({
         email,
-        password,
+        password
       });
 
       return res.status(200).json({
         message: 'Login successful',
         token,
-        user,
+        user
       });
     } catch (error) {
       return res.status(401).json({
-        message: error.message,
+        message: error.message
       });
     }
-  },
+  }
 };
 
 module.exports = AuthController;

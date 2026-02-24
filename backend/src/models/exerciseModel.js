@@ -1,41 +1,37 @@
 const db = require('../config/db');
 
-// для страниц упражнений (как у тебя уже есть)
 async function findByCodeAndOrder(code, order) {
-  const [rows] = await db.query(`
-    SELECT e.*
+  const [rows] = await db.query(
+    `
+    SELECT
+      e.*,
+      v.is_frozen AS course_is_frozen
     FROM exercises e
     JOIN vulnerabilities v ON e.vulnerability_id = v.id
     WHERE v.code = ? AND e.order_index = ?
     LIMIT 1
-  `, [code, order]);
+    `,
+    [code, order]
+  );
 
   return rows[0];
 }
 
 async function findAllByCode(code) {
-  const [rows] = await db.query(`
-    SELECT e.*
+  const [rows] = await db.query(
+    `
+    SELECT
+      e.*,
+      v.is_frozen AS course_is_frozen
     FROM exercises e
     JOIN vulnerabilities v ON e.vulnerability_id = v.id
     WHERE v.code = ?
     ORDER BY e.order_index
-  `, [code]);
-
-  return rows;
-}
-
-// ❗ используется XP-сервисом
-async function findById(conn, exerciseId) {
-  const [rows] = await conn.query(
-    `SELECT id, difficulty
-     FROM exercises
-     WHERE id = ?
-     LIMIT 1`,
-    [exerciseId]
+    `,
+    [code]
   );
 
-  return rows[0];
+  return rows;
 }
 
 async function findAllWithStatus(userId) {
@@ -46,8 +42,10 @@ async function findAllWithStatus(userId) {
       e.title,
       e.difficulty,
       e.order_index,
+      e.is_frozen,
       v.title AS vulnerability_title,
       v.code AS vulnerability_code,
+      v.is_frozen AS course_is_frozen,
       CASE WHEN ue.user_id IS NOT NULL THEN 1 ELSE 0 END AS is_completed
     FROM exercises e
     JOIN vulnerabilities v ON e.vulnerability_id = v.id
@@ -58,12 +56,31 @@ async function findAllWithStatus(userId) {
     `,
     [userId]
   );
+
   return rows;
+}
+
+async function findForAccessById(exerciseId) {
+  const [rows] = await db.query(
+    `
+    SELECT
+      e.id,
+      e.is_frozen,
+      v.is_frozen AS course_is_frozen
+    FROM exercises e
+    JOIN vulnerabilities v ON v.id = e.vulnerability_id
+    WHERE e.id = ?
+    LIMIT 1
+    `,
+    [exerciseId]
+  );
+
+  return rows[0];
 }
 
 module.exports = {
   findByCodeAndOrder,
   findAllByCode,
-  findById,
-  findAllWithStatus
+  findAllWithStatus,
+  findForAccessById
 };

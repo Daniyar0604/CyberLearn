@@ -4,7 +4,7 @@ const path = require('path');
 require('dotenv').config();
 
 const db = require('./src/config/db');
-
+const { ensureFreezeSchema } = require('./src/config/ensureSchema');
 
 // ===== ROUTES =====
 const authRoutes = require('./src/routes/auth');
@@ -25,10 +25,7 @@ app.use(cors());
 app.use(express.json());
 
 // ===== STATIC =====
-app.use(
-  '/uploads/avatars',
-  express.static(path.join(__dirname, 'uploads/avatars'))
-);
+app.use('/uploads/avatars', express.static(path.join(__dirname, 'uploads/avatars')));
 
 // ===== API ROUTES =====
 app.use('/api/auth', authRoutes);
@@ -38,7 +35,6 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/vulnerabilities', vulnerabilitiesRoutes);
 app.use('/api/exercises', exercisesRoutes);
 app.use('/api/lab', labRoutes);
-
 
 app.use('/api/progress', progressRoutes);
 app.use('/api/upload', uploadRoutes);
@@ -56,7 +52,18 @@ app.get('/health', async (req, res) => {
 });
 
 // ===== START SERVER =====
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+async function startServer() {
+  try {
+    await ensureFreezeSchema();
+
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to initialize server schema:', err);
+    process.exit(1);
+  }
+}
+
+startServer();

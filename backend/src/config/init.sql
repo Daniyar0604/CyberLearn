@@ -68,6 +68,7 @@ CREATE TABLE vulnerabilities (
    title VARCHAR(100) NOT NULL,
    -- SQL Injection
    description TEXT,
+   is_frozen TINYINT(1) NOT NULL DEFAULT 0,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -113,6 +114,7 @@ CREATE TABLE exercises (
    -- необязательно, но удобно в UI
    is_published TINYINT(1) NOT NULL DEFAULT 1,
    -- можно скрывать задания
+   is_frozen TINYINT(1) NOT NULL DEFAULT 0,
    lab_key VARCHAR(80) NOT NULL,
    -- ключ лабы (какой docker-образ запускать)
    lab_entry_path VARCHAR(255) DEFAULT '/',

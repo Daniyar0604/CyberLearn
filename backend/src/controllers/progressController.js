@@ -5,10 +5,7 @@ async function getVulnerabilityProgress(req, res) {
     const userId = req.user.id;
     const { code } = req.params;
 
-    const progress = await progressModel.getProgressByVulnerability(
-      userId,
-      code
-    );
+    const progress = await progressModel.getProgressByVulnerability(userId, code);
 
     res.json(progress);
   } catch (e) {
