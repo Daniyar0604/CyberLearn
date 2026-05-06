@@ -4,8 +4,9 @@ import { Database,
   Globe,
   ShieldAlert,
   Terminal,
+  FolderOpen,
+  Code,
   Search,
-  Filter,
   ChevronRight
 } from 'lucide-react';
 
@@ -41,6 +42,18 @@ const UI_MAP = {
     icon: <Terminal size={24} />,
     color: 'red',
     severity: 'critical'
+  },
+  path: {
+    category: 'system',
+    icon: <FolderOpen size={24} />,
+    color: 'amber',
+    severity: 'high'
+  },
+  ssti: {
+    category: 'web',
+    icon: <Code size={24} />,
+    color: 'emerald',
+    severity: 'high'
   }
 };
 
@@ -61,7 +74,8 @@ function VulnerabilitiesPage() {
 
         const withProgress = await Promise.all(
           safeData.map(async vuln => {
-            const ui = UI_MAP[vuln.code] || {};
+            const codeKey = String(vuln.code || '').toLowerCase();
+            const ui = UI_MAP[codeKey] || {};
             const isFrozen = Number(vuln.is_frozen) === 1;
 
             let modules = 0;
@@ -170,7 +184,7 @@ function VulnerabilitiesPage() {
         <div>
           <h1 className="page-title">Каталог уязвимостей</h1>
           <p className="page-subtitle">
-            Изучайте и практикуйтесь в поиске уязвимостей безопасности
+            Дипломной проект Сейткумар Данияр и Чулков Роман
           </p>
         </div>
 
@@ -181,10 +195,6 @@ function VulnerabilitiesPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
-
-          <Button variant="outline" leftIcon={<Filter size={16} />}>
-            Фильтры
-          </Button>
         </div>
       </header>
 

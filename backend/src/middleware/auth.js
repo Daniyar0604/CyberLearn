@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/jwt');
+const UserModel = require('../models/userModel');
 
-function auth(req, res, next) {
+async function auth(req, res, next) {
   const header = req.headers.authorization || '';
   if (!header.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'No token' });
@@ -10,7 +11,19 @@ function auth(req, res, next) {
   const token = header.slice('Bearer '.length);
   try {
     const payload = jwt.verify(token, jwtSecret);
-    req.user = payload; // { id, username, email, role }
+    const user = await UserModel.findById(payload.id);
+
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
+    req.user = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role
+    };
+
     return next();
   } catch (e) {
     return res.status(401).json({ message: 'Invalid token' });
